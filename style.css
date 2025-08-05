@@ -2,22 +2,103 @@ body {
   font-family: monospace;
   background-color: #1e1e1e;
   color: #eee;
-  padding: 20px;
+  margin: 0;
+  padding: 0;
 }
 
-#log {
-  white-space: pre-wrap;
-  background-color: #2b2b2b;
-  padding: 10px;
-  height: 300px;
-  overflow-y: auto;
-  border: 1px solid #444;
-  margin-top: 10px;
+/* 游戏主容器布局 */
+#game {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
 }
 
-button {
+/* 主区域：左侧菜单 + 右侧内容 */
+#main-area {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* 左侧菜单 */
+#sidebar {
+  background: #2a2a2a;
   padding: 10px;
-  margin-right: 10px;
-  margin-top: 10px;
+  width: 150px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border-right: 1px solid #444;
+}
+
+#sidebar button {
+  background-color: #444;
+  color: #eee;
+  border: none;
+  padding: 10px;
   cursor: pointer;
+}
+#sidebar button:hover {
+  background-color: #555;
+}
+
+/* 右侧内容 */
+#content {
+  flex: 1;
+  padding: 15px;
+  overflow-y: auto;
+  background-color: #1e1e1e;
+  color: #eee;
+}
+
+.tab-content {
+  padding: 10px;
+  min-height: 100px;
+  background-color: #2a2a2a;
+  border: 1px solid #444;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+/* 底部按钮区域 */
+#controls {
+  background-color: #2a2a2a;
+  border-top: 1px solid #444;
+  padding: 10px;
+  text-align: center;
+}
+
+#controls button {
+  background-color: #444;
+  color: #eee;
+  border: none;
+  padding: 10px;
+  margin: 5px;
+  cursor: pointer;
+}
+#controls button:hover {
+  background-color: #555;
+}
+
+/* 日志区域 */
+#log {
+  height: 100px;
+  overflow-y: auto;
+  font-size: 14px;
+  padding: 5px 10px;
+  background: #202020;
+  color: #ccc;
+  border-top: 1px solid #444;
+  border-bottom: 1px solid #444;
+  white-space: pre-wrap;
+}
+
+/* 通用按钮 label */
+.btn-label {
+  display: inline-block;
+  padding: 10px;
+  background: #444;
+  color: white;
+  cursor: pointer;
+  margin: 5px;
 }
