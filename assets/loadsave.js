@@ -1,32 +1,52 @@
-// save.js
-import { gameState } from './main.js';
+import { player } from "./player.js";
+import { gameState } from "./main.js";
+import { renderInventoryTab, renderPlayerTab, renderTeamTab} from "./ui.js";
+import { Monster } from "./monster.js";
 
 // ✅ 保存到浏览器 localStorage
 export function saveGame() {
   try {
-    const data = JSON.stringify(gameState);
-    localStorage.setItem("rpg-save", data);
+    const saveData = {
+      player: {
+        name: player.name,
+        level: player.level,
+        exp: player.exp,
+        expToLevelUp: player.expToLevelUp,
+        gold: player.gold,
+        stats: player.stats,
+        inventory: player.inventory,
+        equipment: player.equipment,
+        team: player.team
+      },
+      // 其他非类属性
+      area: gameState.area,
+      currentMonster: gameState.currentMonster,
+      isAutoBattle: gameState.isAutoBattle
+    };
+
+    localStorage.setItem("rpg-save", JSON.stringify(saveData));
     console.log("✅ 游戏已保存到本地 localStorage！");
   } catch (e) {
     console.error("❌ 保存失败：", e);
   }
 }
 
+
 // ✅ 从 localStorage 加载
 export function loadGame() {
   const saved = localStorage.getItem("rpg-save");
-  if (saved) {
-    try {
-      const data = JSON.parse(saved);
-      Object.assign(gameState, data);
-      console.log("✅ 存档读取成功！");
-    } catch (e) {
-      console.error("❌ 存档格式错误：", e);
-    }
-  } else {
-    console.log("📦 没有找到本地存档。");
+  if (!saved) return console.log("📦 没有找到本地存档。");
+
+  try {
+    const data = JSON.parse(saved);
+    restoreGameFromData(data);
+    console.log("✅ 存档读取成功！");
+  } catch (e) {
+    console.error("❌ 存档格式错误：", e);
   }
 }
+
+
 
 // ✅ 导出为 .json 文件（下载）
 export function exportSave() {
@@ -48,7 +68,7 @@ export function importSave(file) {
   reader.onload = () => {
     try {
       const data = JSON.parse(reader.result);
-      Object.assign(gameState, data);
+      restoreGameFromData(data);
       console.log("📥 存档导入成功！");
     } catch (e) {
       console.error("❌ 存档导入失败：", e);
@@ -56,6 +76,9 @@ export function importSave(file) {
   };
   reader.readAsText(file);
 }
+
+
+
 
 // ✅ 高级功能：用户手动选择保存文件位置
 export async function saveToFile() {
@@ -94,21 +117,30 @@ export async function loadFromFile() {
 
   try {
     const [fileHandle] = await window.showOpenFilePicker({
-      types: [
-        {
-          description: 'RPG 存档文件',
-          accept: { 'application/json': ['.json'] }
-        }
-      ]
+      types: [{
+        description: 'RPG 存档文件',
+        accept: { 'application/json': ['.json'] }
+      }]
     });
 
     const file = await fileHandle.getFile();
     const text = await file.text();
     const data = JSON.parse(text);
 
-    Object.assign(gameState, data);
+    restoreGameFromData(data);
     console.log("✅ 存档已从文件读取！");
   } catch (err) {
     console.warn("❌ 读取失败或用户取消：", err);
   }
+}
+
+function restoreGameFromData(data) {
+  Object.assign(player, data.player);
+  gameState.area = data.area;
+  gameState.currentMonster = data.currentMonster ? new Monster(data.currentMonster) : null;
+  gameState.isAutoBattle = data.isAutoBattle;
+
+  renderPlayerTab?.();
+  renderInventoryTab?.();
+  renderTeamTab?.();
 }

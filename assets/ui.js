@@ -1,5 +1,6 @@
 import { player } from './player.js';
 import { itemCatalog } from './item.js';
+import { gameState } from './main.js';
 
 export function showTab(tabId) {
   const tabs = document.querySelectorAll(".tab-content");
@@ -48,25 +49,33 @@ export function renderInventoryTab() {
     return;
   }
 
-  let html = "<ul>";
+  let html = `<div class="inventory-grid">`;
+
   player.inventory.forEach((entry, index) => {
     const item = itemCatalog[entry.id];
     if (!item) return;
 
-    html += `<li>
-      ${item.name} ×${entry.quantity} - ${item.description}
-      ${item.type === "consumable"
-        ? `<button onclick="useItem(${index})">使用</button>`
-        : ""}
-      ${item.type === "weapon" || item.type === "armor"
-        ? `<button onclick="equipItem('${entry.id}')">装备</button>`
-        : ""}
-    </li>`;
-  });
-  html += "</ul>";
+    const tooltip = `${item.description}`;
+    const displayText = `${item.name} ×${entry.quantity}`;
 
+    html += `
+      <div class="item-slot" title="${tooltip}"
+        onclick="${item.type === 'consumable'
+          ? `useItem(${index})`
+          : item.type === 'weapon' || item.type === 'armor'
+            ? `equipItem('${entry.id}')`
+            : ''
+        }">
+        <span class="item-name">${displayText}</span>
+      </div>
+    `;
+  });
+
+  html += `</div>`;
   tab.innerHTML = html;
 }
+
+
 
 
 export function renderTeamTab() {
@@ -82,9 +91,33 @@ export function renderTalentTab() {
 window.useItem = function(index) {
   player.useItem(index);
   renderInventoryTab(); // 使用后刷新 UI
+  renderPlayerTab();
 };
 
 window.equipItem = function(itemId) {
   player.equip(itemId);
   renderInventoryTab(); // 装备后刷新 UI
+  renderPlayerTab();
 };
+
+
+export function renderBattlePanel() {
+  const panel = document.getElementById("battle-panel");
+  if (!panel) return;
+
+  const playerHpBar = hpBar(player.stats.hp, player.stats.maxHp);
+  const monster = gameState.currentMonster;
+  const monsterHpBar = monster ? hpBar(monster.hp, monster.maxHp) : "[--------------------]";
+
+  panel.innerHTML = `
+    <div class="battle-entity">${player.name}：${playerHpBar} ${player.stats.hp}/${player.stats.maxHp}</div>
+    <div class="battle-entity">${monster?.name ?? "???"}：${monsterHpBar} ${monster?.hp ?? 0}/${monster?.maxHp ?? "???"}</div>
+  `;
+}
+
+function hpBar(current, max, width = 20) {
+  const ratio = Math.max(0, Math.min(1, current / max));
+  const fill = Math.round(ratio * width);
+  return `[${'█'.repeat(fill)}${'-'.repeat(width - fill)}]`;
+}
+

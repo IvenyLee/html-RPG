@@ -14,9 +14,9 @@ import { log } from './log.js';  // 日志封装
 // 全局游戏状态
 // ✅ 正确写法：声明并导出一次即可
 export const gameState = {
-  player: player,
-  team: player.team,
-  inventory: player.inventory,
+  player,
+  get team() { return player.team; },
+  get inventory() { return player.inventory; },
   area: null,
   currentMonster: null,
   isAutoBattle: false,

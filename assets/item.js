@@ -108,5 +108,12 @@ export const itemCatalog = {
     description: "一封还未送达的信件，可能属于某人。",
     type: "quest",
     value: 0
+  },
+  strange_underwear:{
+    id: "strange_underwear",
+    name: "贴身内衣",
+    description: "充满了女性的雌香",
+    type: "special",
+    value: 50
   }
 };

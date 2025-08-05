@@ -122,19 +122,21 @@ body {
 
 /* 右侧日志容器 */
 #log-panel {
-  width: 300px;
-  height: 100%; /* ✅ 强制和 #main-area 一样高 */
+  width: 350px;
   background-color: #202020;
   border-left: 1px solid #444;
   display: flex;
   flex-direction: column;
-  flex-shrink: 0; /* ✅ 防止被压缩 */
+  flex-shrink: 0;
+  height: 100%; /* 保证填满主区域 */
+  position: relative;
 }
+
 
 
 /* 内部滚动区域，撑满父容器 */
 #log {
-  flex: 1;
+  flex-grow: 1;           /* 自动填充剩余空间 */
   overflow-y: auto;
   font-size: 14px;
   padding: 5px;
@@ -143,8 +145,6 @@ body {
   border: 1px solid #444;
   white-space: pre-wrap;
 }
-
-
 
 
 /* tab 内容特殊处理 */
@@ -162,4 +162,62 @@ body {
 /* 隐藏的导入按钮 */
 #import-file {
   display: none;
+}
+
+.inventory-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 10px;
+  padding: 10px;
+}
+
+.item-slot {
+  position: relative;
+  height: 60px;
+  border: 1px solid #666;
+  background-color: #222;
+  border-radius: 6px;
+  color: white;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 4px;
+  cursor: pointer;
+  white-space: pre-wrap;
+}
+
+.item-slot:hover {
+  background-color: #333;
+}
+
+.item-name {
+  pointer-events: none;
+}
+
+#battle-panel {
+  height: auto;
+  padding: 6px 10px;
+  background-color: #1a1a1a;
+  border-top: 1px solid #444;
+  font-family: monospace;
+  font-size: 13px;
+  color: #eee;
+  white-space: pre-wrap;
+  box-sizing: border-box;
+  flex-shrink: 0;
+  line-height: 1.4;
+}
+
+.battle-entity {
+  margin: 0;
+  padding: 0;
+}
+
+
+
+.hp-bar {
+  font-family: monospace;
+  font-size: 14px;
 }
