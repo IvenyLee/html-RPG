@@ -90,7 +90,7 @@ export const monsterCatalog = {
     gold: [2, 10],
     loot: [{ itemId: "goblin_ear", chance: 0.5 }, 
         { itemId: "cloth", chance: 0.3 },
-        { itenId: "stick", chance: 0.2}],
+        { itemId: "stick", chance: 0.2}],
     spawnChance: 0.2,
   },
   3: {
