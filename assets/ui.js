@@ -1,5 +1,5 @@
 import { player } from './player.js';
-
+import { itemCatalog } from './item.js';
 
 export function showTab(tabId) {
   const tabs = document.querySelectorAll(".tab-content");
@@ -42,8 +42,32 @@ export function renderPlayerTab() {
 
 export function renderInventoryTab() {
   const tab = document.getElementById("tab-inventory");
-  tab.innerHTML = "<p>暂无道具内容</p>";
+
+  if (player.inventory.length === 0) {
+    tab.innerHTML = "<p>背包空空如也</p>";
+    return;
+  }
+
+  let html = "<ul>";
+  player.inventory.forEach((entry, index) => {
+    const item = itemCatalog[entry.id];
+    if (!item) return;
+
+    html += `<li>
+      ${item.name} ×${entry.quantity} - ${item.description}
+      ${item.type === "consumable"
+        ? `<button onclick="useItem(${index})">使用</button>`
+        : ""}
+      ${item.type === "weapon" || item.type === "armor"
+        ? `<button onclick="equipItem('${entry.id}')">装备</button>`
+        : ""}
+    </li>`;
+  });
+  html += "</ul>";
+
+  tab.innerHTML = html;
 }
+
 
 export function renderTeamTab() {
   const tab = document.getElementById("tab-team");
@@ -55,3 +79,12 @@ export function renderTalentTab() {
   tab.innerHTML = "<p>天赋系统尚未开放</p>";
 }
 
+window.useItem = function(index) {
+  player.useItem(index);
+  renderInventoryTab(); // 使用后刷新 UI
+};
+
+window.equipItem = function(itemId) {
+  player.equip(itemId);
+  renderInventoryTab(); // 装备后刷新 UI
+};

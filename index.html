@@ -6,12 +6,26 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div id="game">
-    <h1>挂机 RPG 游戏</h1>
+  <div id="game"> <!-- ✅ 你漏了这层 -->
+    <div id="top-bar">
+      <div id="left-controls">
+        <button id="start-btn">开始挂机</button>
+        <button id="stop-btn">停止挂机</button>
+      </div>
+      <h1 id="game-title">挂机 RPG 游戏</h1>
+      <div id="right-controls">
+        <button id="save-btn">保存进度</button>
+        <button id="load-btn">读取进度</button>
+        <button id="export-btn">导出存档</button>
+        <button id="save-as-btn">另存为...</button>
+        <label for="import-file" class="btn-label">导入存档</label>
+        <button id="load-from-btn">从文件读取...</button>
+        <input type="file" id="import-file" style="display: none;" />
+      </div>
+    </div>
 
-    <!-- 主区域 -->
     <div id="main-area">
-      <!-- 左侧菜单 -->
+      <!-- 左侧按钮栏 -->
       <div id="sidebar">
         <button id="btn-tab-player">人物</button>
         <button id="btn-tab-inventory">道具</button>
@@ -19,35 +33,21 @@
         <button id="btn-tab-talent">天赋</button>
       </div>
 
-      <!-- 右侧内容展示 -->
+      <!-- 中间内容区 -->
       <div id="content">
         <div class="tab-content" id="tab-player" style="display: none;"></div>
         <div class="tab-content" id="tab-inventory" style="display: none;"></div>
         <div class="tab-content" id="tab-team" style="display: none;"></div>
         <div class="tab-content" id="tab-talent" style="display: none;"></div>
       </div>
-    </div>
 
-    <!-- 日志输出 -->
-    <div id="log"></div>
-
-    <!-- 底部控制按钮 -->
-    <div id="controls">
-      <button id="start-btn">开始挂机</button>
-      <button id="stop-btn">停止挂机</button>
-      <hr />
-      <button id="save-btn">保存进度</button>
-      <button id="load-btn">读取进度</button>
-      <button id="export-btn">导出存档</button>
-      <button id="save-as-btn">另存为...</button>
-
-      <label for="import-file" class="btn-label">导入存档</label>
-      <button id="load-from-btn">从文件读取...</button>
-      <input type="file" id="import-file" style="display: none;" />
+      <!-- 右侧日志栏 -->
+      <div id="log-panel">
+        <div id="log"></div>
+      </div>
     </div>
   </div>
 
   <script type="module" src="./assets/main.js"></script>
 </body>
-
 </html>
