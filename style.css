@@ -211,11 +211,10 @@ body {
 }
 
 .battle-entity {
-  margin: 0;
-  padding: 0;
+  margin-bottom: 4px;
+  line-height: 1.2;
+  font-size: 13px;
 }
-
-
 
 .hp-bar {
   font-family: monospace;

@@ -2,6 +2,7 @@ import { player } from "./player.js";
 import { gameState } from "./main.js";
 import { renderInventoryTab, renderPlayerTab, renderTeamTab} from "./ui.js";
 import { Monster } from "./monster.js";
+import { log } from "./log.js";
 
 // ✅ 保存到浏览器 localStorage
 export function saveGame() {
@@ -134,13 +135,34 @@ export async function loadFromFile() {
   }
 }
 
-function restoreGameFromData(data) {
+export function restoreGameFromData(data) {
+  // 1. 恢复玩家数据（保留方法）
   Object.assign(player, data.player);
-  gameState.area = data.area;
-  gameState.currentMonster = data.currentMonster ? new Monster(data.currentMonster) : null;
-  gameState.isAutoBattle = data.isAutoBattle;
 
+  // 2. 恢复游戏状态
+  gameState.area = data.area;
+  gameState.isAutoBattle = false;  // 不自动挂机，需用户点击
+  gameState.currentMonster = data.currentMonster
+    ? new Monster(data.currentMonster)
+    : null;
+
+  // 3. 如果玩家血量为 0，恢复满血
+  if (player.stats.hp <= 0) {
+    player.stats.hp = player.stats.maxHp;
+    log(`💖 ${player.name} 读取存档后恢复满血`);
+  }
+
+  // 4. 如果怪物存在但已死亡，则清空（否则战斗会卡住）
+  if (gameState.currentMonster && !gameState.currentMonster.isAlive()) {
+    log(`☠️ 怪物 ${gameState.currentMonster.name} 已死亡，等待新战斗开始`);
+    gameState.currentMonster = null;
+  }
+
+  // 5. 刷新 UI
   renderPlayerTab?.();
   renderInventoryTab?.();
   renderTeamTab?.();
+  renderBattlePanel?.();
+
+  log("📂 存档读取完成，请点击『开始挂机』继续游戏");
 }
